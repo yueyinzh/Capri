@@ -1,0 +1,373 @@
+:root {
+  color-scheme: dark;
+  --black: #08090d;
+  --panel: #101015;
+  --line: #3d2029;
+  --red: #ff214f;
+  --red-dim: #7a1027;
+  --paper: #f4ecee;
+  --muted: #9a7780;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+
+body {
+  padding: 5px;
+  color: var(--paper);
+  font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+  user-select: none;
+}
+
+button,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+#menu-panel {
+  display: flex;
+  width: 290px;
+  height: 442px;
+  padding: 11px;
+  flex-direction: column;
+  gap: 8px;
+  border: 2px solid var(--red);
+  background:
+    linear-gradient(90deg, rgba(255, 33, 79, 0.06), transparent 24%),
+    var(--black);
+  box-shadow:
+    inset 0 0 0 1px var(--red-dim),
+    0 14px 30px rgba(0, 0, 0, 0.48);
+  clip-path: polygon(
+    0 0,
+    calc(100% - 12px) 0,
+    100% 12px,
+    100% 100%,
+    12px 100%,
+    0 calc(100% - 12px)
+  );
+}
+
+.menu-header {
+  display: flex;
+  min-height: 34px;
+  padding: 0 2px 8px;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 33, 79, 0.38);
+}
+
+.menu-header > div {
+  display: grid;
+  gap: 2px;
+}
+
+.eyebrow,
+.module-code,
+.control-code,
+.menu-row small,
+footer,
+output {
+  font-family: Consolas, "Courier New", monospace;
+}
+
+.eyebrow {
+  color: var(--red);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.menu-header strong {
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.close-button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: transparent;
+  color: #c78b99;
+  font: 18px/1 Consolas, monospace;
+}
+
+.close-button:hover,
+.close-button:focus-visible {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--black);
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+
+.quick-module {
+  display: grid;
+  min-height: 43px;
+  padding: 7px 8px;
+  align-content: center;
+  gap: 3px;
+  border: 1px solid var(--red-dim);
+  border-left: 3px solid var(--red);
+  border-radius: 0;
+  background: rgba(255, 33, 79, 0.055);
+  color: var(--paper);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: left;
+}
+
+.quick-module:hover,
+.quick-module:focus-visible {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--black);
+}
+
+.module-code {
+  color: #aa6475;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+}
+
+.quick-module:hover .module-code,
+.quick-module:focus-visible .module-code {
+  color: #3d0715;
+}
+
+.control-block {
+  display: grid;
+  gap: 5px;
+  padding: 7px 8px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.012);
+}
+
+.control-block > label,
+.scale-heading,
+.switch-block {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.control-block > label,
+.scale-heading {
+  display: flex;
+}
+
+.control-label {
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.control-code {
+  color: #91606c;
+  font-size: 7px;
+  letter-spacing: 0.06em;
+}
+
+#state-select {
+  width: 100%;
+  height: 27px;
+  padding: 0 26px 0 8px;
+  border: 1px solid #4a2932;
+  border-radius: 0;
+  outline: none;
+  background: #0b090c;
+  color: var(--paper);
+  font-size: 10px;
+}
+
+#state-select:focus {
+  border-color: var(--red);
+}
+
+.switch-block {
+  display: flex;
+  min-height: 43px;
+}
+
+.switch-block > span {
+  display: grid;
+  gap: 2px;
+}
+
+.toggle {
+  position: relative;
+  width: 38px;
+  height: 21px;
+  padding: 0;
+  border: 1px solid #4c2c35;
+  border-radius: 0;
+  background: #0a080b;
+}
+
+.toggle i {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 13px;
+  height: 13px;
+  background: #7d5962;
+  transition: transform 80ms steps(2, end), background 80ms steps(2, end);
+}
+
+.toggle[aria-checked="true"] {
+  border-color: var(--red);
+  background: rgba(255, 33, 79, 0.1);
+}
+
+.toggle[aria-checked="true"] i {
+  background: var(--red);
+  box-shadow: 0 0 8px rgba(255, 33, 79, 0.5);
+  transform: translateX(17px);
+}
+
+output {
+  color: var(--red);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.scale-options {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px;
+}
+
+.scale-option {
+  min-width: 0;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #43262f;
+  border-radius: 0;
+  background: #0b090c;
+  color: #a9828c;
+  font: 8px/1 Consolas, "Courier New", monospace;
+}
+
+.scale-option:hover,
+.scale-option:focus-visible,
+.scale-option.is-active {
+  border-color: var(--red);
+  background: var(--red);
+  color: var(--black);
+}
+
+.system-list {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+
+.menu-row {
+  display: flex;
+  min-height: 30px;
+  padding: 0 9px;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.012);
+  color: var(--paper);
+  font-size: 10px;
+}
+
+.menu-row:last-child {
+  border-bottom: 0;
+}
+
+.menu-row small {
+  color: #83515e;
+  font-size: 7px;
+  letter-spacing: 0.06em;
+}
+
+.menu-row:hover,
+.menu-row:focus-visible {
+  background: var(--red);
+  color: var(--black);
+}
+
+.menu-row:hover small,
+.menu-row:focus-visible small {
+  color: #3d0715;
+}
+
+.menu-row.danger {
+  color: #ff8ca5;
+}
+
+.menu-row.danger:hover,
+.menu-row.danger:focus-visible {
+  background: #b50f35;
+  color: #fff;
+}
+
+.menu-row:disabled {
+  color: #695860;
+  cursor: not-allowed;
+}
+
+footer {
+  display: flex;
+  min-height: 12px;
+  margin-top: auto;
+  padding: 0 2px;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 33, 79, 0.28);
+  color: #76545d;
+  font-size: 7px;
+}
+
+.bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 7px;
+}
+
+.bars i {
+  display: block;
+  width: 2px;
+  background: var(--red);
+}
+
+.bars i:nth-child(1) {
+  height: 2px;
+}
+
+.bars i:nth-child(2) {
+  height: 4px;
+}
+
+.bars i:nth-child(3) {
+  height: 3px;
+}
+
+.bars i:nth-child(4) {
+  height: 7px;
+}

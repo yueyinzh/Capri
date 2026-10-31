@@ -1,0 +1,25 @@
+{
+  "name": "mojie-desktop-pet",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A transparent Electron desktop pet named Mo Jie.",
+  "main": "src/main.js",
+  "scripts": {
+    "postinstall": "node scripts/install-electron.cjs",
+    "dev": "electron .",
+    "start": "electron .",
+    "smoke:modules": "electron scripts/module-smoke.cjs",
+    "shortcut": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-windows-shortcut.ps1",
+    "setup:video-tools": "node scripts/setup-video-tools.cjs",
+    "prepare:assets": "node scripts/prepare-assets.cjs",
+    "check": "node scripts/check-config.cjs && node --check scripts/create-windows-icon.cjs && node --check scripts/install-electron.cjs && node --check scripts/module-smoke.cjs && node --check scripts/prepare-assets.cjs && node --check scripts/setup-video-tools.cjs && node --check src/main.js && node --check src/main/pet-menu.js && node --check src/preload.js && node --check src/preload/cleaner.js && node --check src/preload/pet-menu.js && node --check src/preload/video.js && node --check src/main/cleaner/index.js && node --check src/main/cleaner/paths.js && node --check src/main/cleaner/plan-store.js && node --check src/main/cleaner/scanner.js && node --check src/main/cleaner/executor.js && node --check src/main/video/url-policy.js && node --check src/main/video/tools.js && node --check src/main/video/queue.js && node --check src/main/video/index.js && node --check src/renderer/app.js && node --check src/renderer/settings.js && node --check src/renderer/cleaner/app.js && node --check src/renderer/pet-menu/app.js && node --check src/renderer/video/app.js"
+  },
+  "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0"
+  },
+  "devDependencies": {
+    "electron": "^45.2.1",
+    "jpeg-js": "^0.4.4",
+    "pngjs": "^7.0.0"
+  }
+}

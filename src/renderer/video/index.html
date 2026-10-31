@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'none'; media-src 'none'; frame-src 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPRI // 视频下载</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="hero">
+        <div>
+          <div class="eyebrow">CAPRI // MEDIA INTAKE</div>
+          <h1>输入网址，抓取视频</h1>
+          <p>后端在独立主进程中解析，网页脚本不会接触本地文件系统。</p>
+        </div>
+        <div id="tool-badge" class="tool-badge">CHECKING</div>
+      </header>
+
+      <section class="notice" aria-label="版权提示">
+        <strong>版权与访问权限</strong>
+        <span>
+          请仅下载你拥有版权、授权或许可的内容，并遵守目标网站服务条款。不支持 DRM、登录绕过或无权限内容。
+        </span>
+      </section>
+
+      <section class="intake-panel">
+        <label class="field-label" for="video-url">视频页面 URL</label>
+        <div class="url-row">
+          <input
+            id="video-url"
+            type="url"
+            inputmode="url"
+            autocomplete="off"
+            spellcheck="false"
+            placeholder="https://www.example.com/video/..."
+          />
+          <button id="add-job" type="button" disabled>解析并下载</button>
+        </div>
+
+        <label class="rights-row">
+          <input id="rights-confirmed" type="checkbox" />
+          <span>我确认自己有权下载该内容，并会遵守目标网站服务条款。</span>
+        </label>
+
+        <div id="form-message" class="form-message" role="status" aria-live="polite"></div>
+        <div id="tools-message" class="tools-message"></div>
+      </section>
+
+      <section class="queue-section">
+        <div class="section-heading">
+          <div>
+            <span class="section-index">01</span>
+            <h2>下载队列</h2>
+          </div>
+          <button id="open-output" class="ghost-button" type="button">
+            打开下载目录
+          </button>
+        </div>
+
+        <div id="job-list" class="job-list">
+          <div class="empty-state">
+            <span>QUEUE EMPTY</span>
+            <p>粘贴网址并确认版权后，任务会显示在这里。</p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <span>输出目录</span>
+        <code id="output-root">Downloads/CAPRI</code>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

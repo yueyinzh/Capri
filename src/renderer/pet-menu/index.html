@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; connect-src 'none'; img-src 'self' data:"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPRI // COMMAND</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="menu-panel" role="menu" aria-label="摩羯桌宠菜单">
+      <header class="menu-header">
+        <div>
+          <span class="eyebrow">CAPRI // COMMAND</span>
+          <strong>桌宠控制台</strong>
+        </div>
+        <button id="close-menu" class="close-button" type="button" aria-label="关闭菜单">
+          ×
+        </button>
+      </header>
+
+      <section class="quick-grid" aria-label="快捷操作">
+        <button class="quick-module" type="button" data-action="open-cleaner">
+          <span class="module-code">CLEAN.CACHE</span>
+          <span>一键提速</span>
+        </button>
+        <button class="quick-module" type="button" data-action="open-downloader">
+          <span class="module-code">VIDEO.LINK</span>
+          <span>视频下载</span>
+        </button>
+      </section>
+
+      <section class="control-block">
+        <label for="state-select">
+          <span class="control-label">切换表情</span>
+          <span id="state-code" class="control-code">STATE // 01</span>
+        </label>
+        <select id="state-select">
+          <option value="">选择表情状态…</option>
+        </select>
+      </section>
+
+      <section class="control-block switch-block">
+        <span>
+          <span class="control-label">始终置顶</span>
+          <span class="control-code">WINDOW.LAYER</span>
+        </span>
+        <button
+          id="always-on-top"
+          class="toggle"
+          type="button"
+          role="switch"
+          aria-checked="true"
+          aria-label="始终置顶"
+        >
+          <i></i>
+        </button>
+      </section>
+
+      <section class="control-block">
+        <div class="scale-heading">
+          <span class="control-label">窗口缩放</span>
+          <output id="scale-value">100%</output>
+        </div>
+        <div id="scale-options" class="scale-options"></div>
+      </section>
+
+      <section class="system-list" aria-label="系统操作">
+        <button class="menu-row" type="button" data-action="open-settings">
+          <span>设置</span>
+          <small>SETTINGS.CFG</small>
+        </button>
+        <button id="hide-pet" class="menu-row" type="button" data-action="hide-pet">
+          <span>隐藏到托盘</span>
+          <small>WINDOW.HIDE</small>
+        </button>
+        <button class="menu-row danger" type="button" data-action="quit">
+          <span>退出摩羯</span>
+          <small>SYSTEM.EXIT</small>
+        </button>
+      </section>
+
+      <footer>
+        <span>LOCAL NODE 07</span>
+        <span class="bars"><i></i><i></i><i></i><i></i></span>
+        <span>ONLINE</span>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

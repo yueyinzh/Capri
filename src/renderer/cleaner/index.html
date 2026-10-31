@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPRI 一键提速</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="cleaner-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">CAPRI // SYSTEM MAINTENANCE</p>
+          <h1>一键提速<span>清理预览</span></h1>
+          <p class="lead">
+            只扫描临时文件、应用日志和浏览器缓存。这里不做内存“假释放”，
+            也不会结束进程、修改注册表或触碰系统目录。
+          </p>
+        </div>
+        <div class="hero-mark" aria-hidden="true">
+          <span>07</span>
+          <i></i>
+          <small>SAFE MODE</small>
+        </div>
+      </header>
+
+      <section class="panel" aria-labelledby="scope-title">
+        <div class="panel-heading">
+          <div>
+            <p class="section-code">01 // SCAN SCOPE</p>
+            <h2 id="scope-title">选择清理范围</h2>
+          </div>
+          <span class="status-pill">DRY RUN FIRST</span>
+        </div>
+
+        <div class="category-grid">
+          <label class="category-card">
+            <input type="checkbox" value="temp" checked />
+            <span class="check-mark"></span>
+            <strong>临时目录</strong>
+            <small>仅使用系统临时路径，并跳过 24 小时内新文件</small>
+          </label>
+
+          <label class="category-card">
+            <input type="checkbox" value="chrome-cache" checked />
+            <span class="check-mark"></span>
+            <strong>Chrome 缓存</strong>
+            <small>只处理 Cache / Code Cache / GPUCache</small>
+          </label>
+
+          <label class="category-card">
+            <input type="checkbox" value="edge-cache" checked />
+            <span class="check-mark"></span>
+            <strong>Edge 缓存</strong>
+            <small>不触碰 Cookie、密码、历史与书签</small>
+          </label>
+
+          <label class="category-card">
+            <input type="checkbox" value="logs" checked />
+            <span class="check-mark"></span>
+            <strong>Capri 日志</strong>
+            <small>只扫描 Capri 自己的日志目录</small>
+          </label>
+
+          <label class="category-card danger-option">
+            <input id="node-modules-option" type="checkbox" value="node_modules" />
+            <span class="check-mark"></span>
+            <strong>项目 node_modules</strong>
+            <small>默认关闭，必须手动选择 Node 项目</small>
+          </label>
+
+          <div class="category-card disabled-option">
+            <span class="check-mark"></span>
+            <strong>回收站</strong>
+            <small>首版不实现，避免平台差异导致误清空</small>
+          </div>
+        </div>
+
+        <div id="project-row" class="project-row" hidden>
+          <div>
+            <strong>清理目标项目</strong>
+            <small id="project-path">尚未选择项目</small>
+          </div>
+          <button id="choose-project" class="button secondary" type="button">
+            选择项目
+          </button>
+        </div>
+      </section>
+
+      <section class="scan-actions">
+        <div id="status" class="notice" role="status" aria-live="polite">
+          扫描只读取目录信息，不会删除文件。
+        </div>
+        <button id="scan" class="button primary" type="button">扫描并预览</button>
+      </section>
+
+      <section id="progress-panel" class="panel progress-panel" hidden>
+        <div class="progress-copy">
+          <span id="progress-label">正在扫描本地目录…</span>
+          <span id="progress-value">准备中</span>
+        </div>
+        <div class="progress-track">
+          <i id="progress-bar"></i>
+        </div>
+        <div class="progress-foot">
+          <span id="progress-detail">尚未发现可清理项</span>
+          <button id="cancel-run" class="text-button" type="button" hidden>
+            取消清理
+          </button>
+        </div>
+      </section>
+
+      <section id="preview-panel" class="panel preview-panel" hidden>
+        <div class="panel-heading">
+          <div>
+            <p class="section-code">02 // REVIEW PLAN</p>
+            <h2>确认要删除的内容</h2>
+          </div>
+          <span id="plan-code" class="status-pill">PLAN READY</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th class="check-column"></th>
+                <th>类别</th>
+                <th>路径</th>
+                <th>文件数</th>
+                <th>大小</th>
+              </tr>
+            </thead>
+            <tbody id="preview-rows"></tbody>
+          </table>
+        </div>
+
+        <div id="scan-warnings" class="warning-list" hidden></div>
+
+        <div class="confirm-bar">
+          <div>
+            <span>已选择</span>
+            <strong id="selected-summary">0 项 · 0 B</strong>
+          </div>
+          <button id="execute" class="button danger" type="button" disabled>
+            确认并清理所选
+          </button>
+        </div>
+      </section>
+
+      <section id="result-panel" class="panel result-panel" hidden>
+        <p class="section-code">03 // OPERATION RESULT</p>
+        <div class="result-grid">
+          <div>
+            <span>实际释放</span>
+            <strong id="result-freed">0 B</strong>
+          </div>
+          <div>
+            <span>已删除文件</span>
+            <strong id="result-files">0</strong>
+          </div>
+          <div>
+            <span>跳过 / 失败</span>
+            <strong id="result-skipped">0</strong>
+          </div>
+        </div>
+        <p id="result-message" class="result-message"></p>
+        <details id="failure-details" class="failure-details" hidden>
+          <summary>查看未删除项</summary>
+          <ul id="failure-list"></ul>
+        </details>
+      </section>
+
+      <footer class="safety-foot">
+        <span>硬性边界：Windows / System32、/etc、/usr/bin、系统根目录和浏览器个人数据目录均禁止访问。</span>
+        <span>删除失败的文件会自动跳过，不影响其余项目。</span>
+      </footer>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

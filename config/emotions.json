@@ -1,0 +1,196 @@
+{
+  "version": 1,
+  "source": {
+    "file": "assets/source/mojie_sheet_A.jpg",
+    "width": 1206,
+    "height": 2012,
+    "background": "#E6E7ED",
+    "grid": [3, 5],
+    "xBands": [0, 402, 820, 1206],
+    "yBands": [0, 416, 798, 1215, 1603, 2012]
+  },
+  "canvas": {
+    "width": 448,
+    "height": 448,
+    "maxContent": 420,
+    "baselineY": 428
+  },
+  "matte": {
+    "tolerance": 32,
+    "featherDistance": 72,
+    "minimumComponentPixels": 16,
+    "padding": 2
+  },
+  "idleTimeoutMs": 90000,
+  "blinkIntervalMs": [3000, 7000],
+  "microActionIntervalMs": [8000, 15000],
+  "emotionPool": ["happy", "angry", "sad", "surprised", "shy"],
+  "frames": {
+    "A1_idle": {
+      "file": "assets/emotions/A1_idle.png",
+      "rect": [16, 13, 379, 404],
+      "label": "冷淡待机"
+    },
+    "A2_work": {
+      "file": "assets/emotions/A2_work.png",
+      "rect": [423, 56, 368, 352],
+      "label": "低头忙活"
+    },
+    "A3_idle_alt": {
+      "file": "assets/emotions/A3_idle_alt.png",
+      "rect": [831, 36, 358, 372],
+      "label": "侧目坏笑"
+    },
+    "A4_click_wink": {
+      "file": "assets/emotions/A4_click_wink.png",
+      "rect": [15, 415, 372, 361],
+      "label": "眨眼挑衅"
+    },
+    "A5_sleep_alt": {
+      "file": "assets/emotions/A5_sleep_alt.png",
+      "rect": [403, 450, 411, 313],
+      "label": "侧卧犯懒",
+      "baselineY": 418
+    },
+    "A6_blink": {
+      "file": "assets/emotions/A6_blink.png",
+      "rect": [836, 429, 361, 338],
+      "label": "闭眼憋笑"
+    },
+    "A7_surprised_alt": {
+      "file": "assets/emotions/A7_surprised_alt.png",
+      "rect": [25, 826, 365, 387],
+      "label": "呆住"
+    },
+    "A8_sad": {
+      "file": "assets/emotions/A8_sad.png",
+      "rect": [415, 819, 386, 389],
+      "label": "低落"
+    },
+    "A9_angry": {
+      "file": "assets/emotions/A9_angry.png",
+      "rect": [825, 826, 356, 384],
+      "label": "嘴毒发作"
+    },
+    "A10_shy": {
+      "file": "assets/emotions/A10_shy.png",
+      "rect": [25, 1221, 377, 384],
+      "label": "别扭害羞"
+    },
+    "A11_surprised": {
+      "file": "assets/emotions/A11_surprised.png",
+      "rect": [418, 1217, 382, 388],
+      "label": "受惊"
+    },
+    "A12_click_burst": {
+      "file": "assets/emotions/A12_click_burst.png",
+      "rect": [835, 1328, 347, 202],
+      "label": "被戳爆"
+    },
+    "A13_drag": {
+      "file": "assets/emotions/A13_drag.png",
+      "rect": [18, 1612, 374, 389],
+      "label": "挣扎"
+    },
+    "A14_sleep": {
+      "file": "assets/emotions/A14_sleep.png",
+      "rect": [410, 1602, 389, 405],
+      "label": "困到冒泡"
+    },
+    "A15_happy": {
+      "file": "assets/emotions/A15_happy.png",
+      "rect": [831, 1619, 363, 372],
+      "label": "得意大笑"
+    }
+  },
+  "states": {
+    "idle": {
+      "label": "待机",
+      "frames": ["A1_idle", "A3_idle_alt"],
+      "priority": 0,
+      "timeoutMs": null,
+      "onEnd": null,
+      "motion": "sway"
+    },
+    "blink": {
+      "label": "眨眼",
+      "frames": ["A6_blink"],
+      "priority": 10,
+      "timeoutMs": 160,
+      "onEnd": "idle",
+      "motion": "none"
+    },
+    "click": {
+      "label": "被戳",
+      "frames": ["A4_click_wink", "A12_click_burst"],
+      "priority": 90,
+      "timeoutMs": 700,
+      "onEnd": "randomEmotion",
+      "motion": "poke"
+    },
+    "drag": {
+      "label": "拖拽",
+      "frames": ["A13_drag"],
+      "priority": 100,
+      "timeoutMs": null,
+      "onEnd": "idle",
+      "motion": "drag"
+    },
+    "sleep": {
+      "label": "睡觉",
+      "frames": ["A14_sleep", "A5_sleep_alt"],
+      "priority": 20,
+      "timeoutMs": null,
+      "onEnd": null,
+      "motion": "breathe"
+    },
+    "happy": {
+      "label": "得意",
+      "frames": ["A15_happy"],
+      "priority": 60,
+      "timeoutMs": 2000,
+      "onEnd": "idle",
+      "motion": "bounce"
+    },
+    "angry": {
+      "label": "生气",
+      "frames": ["A9_angry", "A12_click_burst"],
+      "priority": 70,
+      "timeoutMs": 1600,
+      "onEnd": "idle",
+      "motion": "shake"
+    },
+    "sad": {
+      "label": "低落",
+      "frames": ["A8_sad"],
+      "priority": 60,
+      "timeoutMs": 2200,
+      "onEnd": "idle",
+      "motion": "slump"
+    },
+    "surprised": {
+      "label": "惊讶",
+      "frames": ["A11_surprised", "A7_surprised_alt"],
+      "priority": 80,
+      "timeoutMs": 1100,
+      "onEnd": "idle",
+      "motion": "startle"
+    },
+    "shy": {
+      "label": "害羞",
+      "frames": ["A10_shy"],
+      "priority": 60,
+      "timeoutMs": 1800,
+      "onEnd": "idle",
+      "motion": "wiggle"
+    },
+    "work": {
+      "label": "忙活",
+      "frames": ["A2_work"],
+      "priority": 30,
+      "timeoutMs": 3000,
+      "onEnd": "idle",
+      "motion": "work"
+    }
+  }
+}

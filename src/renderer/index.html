@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' file: data:; style-src 'self'; script-src 'self'; connect-src 'none'; media-src 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>摩羯桌宠</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main id="pet-shell" aria-label="摩羯桌宠">
+      <div
+        id="speech-bubble"
+        role="region"
+        aria-label="桌宠对话和快捷操作"
+        aria-hidden="true"
+        inert
+      >
+        <div class="speech-frame">
+          <header class="speech-header" aria-hidden="true">
+            <span class="speech-channel">
+              <i class="signal-mark"></i>
+              CAPRI.LINK
+            </span>
+            <span id="speech-status">STANDBY // IDLE</span>
+          </header>
+          <div class="speech-body">
+            <span id="speech-text" role="status" aria-live="polite"></span>
+            <i class="speech-caret" aria-hidden="true"></i>
+          </div>
+          <footer class="speech-footer">
+            <div class="quick-actions">
+              <button
+                id="quick-download"
+                class="quick-action"
+                type="button"
+                aria-label="打开视频下载窗口"
+              >
+                <span class="quick-label">视频下载</span>
+                <span class="quick-code">VIDEO.LINK</span>
+              </button>
+              <button
+                id="quick-cleaner"
+                class="quick-action"
+                type="button"
+                aria-label="打开一键提速和缓存清理窗口"
+              >
+                <span class="quick-label">一键提速</span>
+                <span class="quick-code">CLEAN.CACHE</span>
+              </button>
+            </div>
+            <span class="telemetry">
+              <i></i><i></i><i></i><i></i><i></i>
+            </span>
+          </footer>
+        </div>
+        <i class="speech-tail" aria-hidden="true"></i>
+      </div>
+
+      <button
+        id="pet-stage"
+        type="button"
+        aria-label="单击逗摩羯，双击打开互动菜单，右键打开设置菜单"
+      >
+        <img id="pet-image" alt="摩羯" draggable="false" />
+      </button>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
