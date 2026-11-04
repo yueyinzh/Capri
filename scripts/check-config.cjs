@@ -6,10 +6,14 @@ const root = path.join(__dirname, "..");
 const emotionPath = path.join(root, "config", "emotions.json");
 const dialoguePath = path.join(root, "config", "dialogues.json");
 const settingsPath = path.join(root, "config", "default-settings.json");
+const chatDefaultsPath = path.join(root, "config", "chat.defaults.json");
+const personaPath = path.join(root, "config", "persona.json");
 
 const emotions = JSON.parse(fs.readFileSync(emotionPath, "utf8"));
 const dialogues = JSON.parse(fs.readFileSync(dialoguePath, "utf8"));
 const settings = JSON.parse(fs.readFileSync(settingsPath, "utf8"));
+const chatDefaults = JSON.parse(fs.readFileSync(chatDefaultsPath, "utf8"));
+const persona = JSON.parse(fs.readFileSync(personaPath, "utf8"));
 
 const frameIds = new Set(Object.keys(emotions.frames));
 const stateEntries = Object.entries(emotions.states);
@@ -94,6 +98,19 @@ if (
 
 if (!dialogues.click || !dialogues.drag || !dialogues.sleep) {
   throw new Error("dialogues.json 缺少必要对话组");
+}
+
+const antiExamples = persona.prompt?.L1?.antiExamples;
+if (!Array.isArray(antiExamples) || antiExamples.length < 3 || antiExamples.length > 5) {
+  throw new Error("persona.json 必须包含 3 到 5 条反例");
+}
+if (!chatDefaults.prompt?.L4?.requiredKeys?.includes("reply")) {
+  throw new Error("chat.defaults.json 缺少结构化输出约束");
+}
+for (const state of ["chat_listening", "chat_thinking", "chat_speaking"]) {
+  if (!emotions.states[state]) {
+    throw new Error(`emotions.json 缺少聊天状态 ${state}`);
+  }
 }
 
 console.log(`配置检查通过：${frameIds.size} 帧，${stateEntries.length} 个状态`);

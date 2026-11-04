@@ -13,6 +13,7 @@ contextBridge.exposeInMainWorld("capri", {
   openSettings: () => ipcRenderer.invoke("settings:open"),
   openCleaner: () => ipcRenderer.send("app:open-cleaner"),
   openDownloader: () => ipcRenderer.send("app:open-downloader"),
+  openChat: () => ipcRenderer.send("chat:open"),
   resetPosition: () => ipcRenderer.invoke("settings:reset-position"),
   quit: () => ipcRenderer.invoke("app:quit"),
   showPetMenu: () => ipcRenderer.send("pet:context-menu"),
@@ -23,5 +24,6 @@ contextBridge.exposeInMainWorld("capri", {
   onSettingsChanged: (callback) => subscribe("settings:changed", callback),
   onStateRequested: (callback) => subscribe("pet:set-state", callback),
   onNotice: (callback) => subscribe("pet:show-notice", callback),
+  onChatBubble: (callback) => subscribe("pet:chat-bubble", callback),
   onShowRequested: (callback) => subscribe("pet:show", callback)
 });

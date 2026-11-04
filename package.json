@@ -9,17 +9,28 @@
     "dev": "electron .",
     "start": "electron .",
     "smoke:modules": "electron scripts/module-smoke.cjs",
+    "rebuild:native": "electron-rebuild -f -w keytar",
     "shortcut": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/install-windows-shortcut.ps1",
     "setup:video-tools": "node scripts/setup-video-tools.cjs",
     "prepare:assets": "node scripts/prepare-assets.cjs",
-    "check": "node scripts/check-config.cjs && node --check scripts/create-windows-icon.cjs && node --check scripts/install-electron.cjs && node --check scripts/module-smoke.cjs && node --check scripts/prepare-assets.cjs && node --check scripts/setup-video-tools.cjs && node --check src/main.js && node --check src/main/pet-menu.js && node --check src/preload.js && node --check src/preload/cleaner.js && node --check src/preload/pet-menu.js && node --check src/preload/video.js && node --check src/main/cleaner/index.js && node --check src/main/cleaner/paths.js && node --check src/main/cleaner/plan-store.js && node --check src/main/cleaner/scanner.js && node --check src/main/cleaner/executor.js && node --check src/main/video/url-policy.js && node --check src/main/video/tools.js && node --check src/main/video/queue.js && node --check src/main/video/index.js && node --check src/renderer/app.js && node --check src/renderer/settings.js && node --check src/renderer/cleaner/app.js && node --check src/renderer/pet-menu/app.js && node --check src/renderer/video/app.js"
+    "check": "node scripts/check-config.cjs && node --check scripts/create-windows-icon.cjs && node --check scripts/install-electron.cjs && node --check scripts/module-smoke.cjs && node --check scripts/prepare-assets.cjs && node --check scripts/setup-video-tools.cjs && node --check scripts/test-chat.cjs && node --check scripts/test-chat-credentials.cjs && node --check scripts/test-chat-module.cjs && node --check src/main.js && node --check src/main/pet-menu.js && node --check src/preload.js && node --check src/preload/chat.js && node --check src/preload/cleaner.js && node --check src/preload/pet-menu.js && node --check src/preload/video.js && node --check src/main/chat/index.js && node --check src/main/chat/context-manager.js && node --check src/main/chat/credential-store.js && node --check src/main/chat/provider-client.js && node --check src/main/chat/runtime-context.js && node --check src/main/chat/session-store.js && node --check src/main/chat/stream-decoder.js && node --check src/main/cleaner/index.js && node --check src/main/cleaner/paths.js && node --check src/main/cleaner/plan-store.js && node --check src/main/cleaner/scanner.js && node --check src/main/cleaner/executor.js && node --check src/main/video/url-policy.js && node --check src/main/video/tools.js && node --check src/main/video/queue.js && node --check src/main/video/index.js && node --check src/renderer/app.js && node --check src/renderer/settings.js && node --check src/renderer/chat/app.js && node --check src/renderer/cleaner/app.js && node --check src/renderer/pet-menu/app.js && node --check src/renderer/video/app.js && node scripts/test-chat.cjs",
+    "test:chat": "node scripts/test-chat.cjs",
+    "test:chat-credentials": "electron scripts/test-chat-credentials.cjs",
+    "test:chat-module": "electron scripts/test-chat-module.cjs"
   },
   "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.1.0"
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "active-win": "^9.0.0",
+    "keytar": "^7.9.0"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.2.1",
     "electron": "^45.2.1",
     "jpeg-js": "^0.4.4",
     "pngjs": "^7.0.0"
+  },
+  "allowScripts": {
+    "keytar@7.9.0": true,
+    "active-win@9.0.0": true
   }
 }

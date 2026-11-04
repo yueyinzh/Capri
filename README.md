@@ -1,6 +1,6 @@
 # 摩羯桌宠
 
-基于用户提供的「摩羯」表情差分图制作的 Windows / macOS 桌面宠物。角色素材仅经过安全裁切、抠图、透明化和等比归一化，没有重绘、替换或生成新的角色形象。
+Windows / macOS 桌面宠物。角色素材仅经过安全裁切、抠图、透明化和等比归一化。
 
 ## 功能
 
@@ -19,6 +19,7 @@
 - 统一 `448 × 448` 透明画布，等比显示，不拉伸角色
 - 一键提速：安全 dry-run、路径预览、确认后清理临时文件与浏览器缓存
 - 视频下载：网址校验、yt-dlp 队列、进度、取消、重试和保存目录
+- 大模型聊天：角色化 Prompt、流式回复、独立聊天窗口、多轮裁剪、停止和清空
 
 ## 环境要求
 
@@ -79,8 +80,9 @@ npm run shortcut
 | 按住并移动 | 拖动窗口，播放 `drag` 表情 |
 | 右键角色 | 打开红黑终端风格桌宠控制台 |
 | 气泡快捷栏 | 直接打开视频下载或一键提速 |
+| 气泡快捷栏“找她说话” | 打开独立的摩羯聊天窗口 |
 | 托盘单击 | 显示或隐藏桌宠 |
-| 托盘右键 | 显示/隐藏、一键提速、视频下载、设置、退出 |
+| 托盘右键 | 显示/隐藏、和大模型聊天、一键提速、视频下载、设置、退出 |
 
 右键菜单里的“退出摩羯”和设置页里的“退出程序”会销毁窗口与托盘图标并退出 Electron，不会留下后台进程。
 
@@ -129,6 +131,99 @@ npm run shortcut
 > 请仅下载你拥有版权、授权或许可的内容，并遵守目标网站服务条款和版权规定。
 
 可通过 `CAPRI_YTDLP_PATH` 和 `CAPRI_FFMPEG_PATH` 覆盖工具路径。第三方工具许可说明见 `tools/THIRD_PARTY_NOTICES.md`。
+
+## 大模型聊天
+
+从桌宠气泡快捷栏“找她说话”、右键菜单或托盘菜单打开独立聊天窗口。聊天窗口不复用桌宠透明窗口，因此打开、关闭或调整聊天窗口不会改变桌宠的透明置顶逻辑。
+
+### Provider 配置
+
+打开聊天窗口后点击“连接设置”，填写：
+
+- Base URL：例如 `https://api.openai.com/v1`
+- 模型名：填写你的 OpenAI Chat Completions 兼容模型
+- 关系尺度：用户本人、熟人或陌生人
+- 活动窗口上下文：可选择关闭
+
+请求由 Electron 主进程发出，使用：
+
+```text
+POST {Base URL}/chat/completions
+stream: true
+```
+
+兼容标准 SSE `choices[0].delta.content`；如果 Provider 忽略 `stream` 而返回完整 JSON，也能正常解析。Base URL 允许 HTTPS，以及本机的 `http://localhost`、`http://127.0.0.1` 和 `http://[::1]`。
+
+### API Key 与安全
+
+API Key 在聊天设置中以密码框输入，提交后立即从页面控件清空：
+
+1. 优先使用 `keytar` 写入 Windows Credential Manager 或 macOS Keychain。
+2. 系统钥匙串失败时，使用 Electron `safeStorage` 加密后写入 `userData/chat/provider-key.enc`。
+3. 两种安全存储都不可用时，仅保留在本次主进程内存中，并明确提示不会持久化。
+
+不会把 API Key 写入聊天记录、`provider.json`、`localStorage`、日志或渲染层可读取的配置。渲染进程只能在提交时短暂读取密码框内容，申请后不能重新读取已保存密钥。聊天 preload 只暴露收发消息、停止、清空、保存 Provider 配置和设置/删除密钥的最小 API。
+
+升级 Electron 或更换 Node ABI 后如果钥匙串模块无法加载，可执行：
+
+```powershell
+npm run rebuild:native
+```
+
+安全注意事项：
+
+- 不要在 Base URL 中拼接用户名、密码或 API Key。
+- 远程 Provider 必须使用 HTTPS；不要使用来源不明或要求关闭 TLS 校验的代理。
+- API Key 只应授予所需权限，并定期轮换。
+- 活动窗口上下文默认只发送应用名和截断为 80 字符的窗口标题，不发送窗口路径。窗口标题可能包含文件名或网页标题，可在设置中关闭。
+- 聊天内容会发送给配置的 Provider；不要输入不希望交给该服务的敏感信息。
+
+### Prompt 与上下文
+
+System Prompt 分为：
+
+- L0：角色名、性格和身份边界
+- L1：句式、口头禅、语气词密度和 5 条禁用表达
+- L2：陌生人、熟人、用户本人的关系尺度，以及冒犯和展开策略
+- L3：当前时间、活动窗口、桌宠状态、最近摘要
+- L4：`reply/emotion/action` JSON 输出约束
+
+角色配置位于 `config/persona.json`，全局规则和裁剪上限位于 `config/chat.defaults.json`。合并优先级固定为：
+
+```text
+用户覆盖 > 角色 manifest > 全局默认
+```
+
+用户覆盖文件位于 `%APPDATA%\mojie-desktop-pet\chat\persona-overrides\<personaId>.json`。合并后仍会重新校验反例数量和 emotion/action 白名单。
+
+每次请求最多发送 24 条、12000 字符，并进一步限制在最近 6 轮；最新用户消息不会被静默丢弃。被裁剪的旧轮次会压成本地滚动摘要，不额外调用模型。消息正文持久化在：
+
+```text
+userData/chat/sessions/<personaId>.json
+```
+
+会话按角色隔离。切换角色只中止当前请求并加载对应文件，不会清空或混用另一角色的历史。当前版本不建立原始对话全文长期记忆库，只保留会话内摘要。
+
+### 桌宠联动与降级
+
+- 收到消息时依次进入 `chat_listening`、`chat_thinking`。
+- 首个正文增量到达后进入 `chat_speaking`，流式文本同时更新聊天窗口和桌宠气泡。
+- 完成后按 JSON 的 emotion/action 切换表情，再回到 idle。
+- “停止生成”保留已经出现的文本，不显示错误弹窗。
+- “清空会话”会先中止当前请求，再删除当前角色的历史和摘要。
+- 网络失败、超时和 JSON 损坏只产生一次角色化简短回复，并回到 idle。
+
+`chat_listening`、`chat_thinking`、`chat_speaking` 复用现有表情帧，没有新增或重绘角色素材。
+
+聊天测试：
+
+```powershell
+npm run test:chat
+npm run test:chat-credentials
+npm run test:chat-module
+```
+
+后两条命令会启动 Electron，分别验证系统密钥存储/加密回退和完整聊天模块；测试结束会删除测试密钥。
 
 ## 素材
 
@@ -245,13 +340,16 @@ capri/
 │  ├─ main/pet-menu.js       自定义桌宠右键控制台
 │  ├─ preload.js             安全 IPC 桥
 │  ├─ main/
+│  │  ├─ chat/               聊天服务、上下文、凭据、SSE 和会话
 │  │  ├─ cleaner/            文件扫描、安全计划、删除执行器
 │  │  └─ video/              URL 策略、工具解析、下载队列
 │  ├─ preload/
+│  │  ├─ chat.js             聊天窗口最小 API
 │  │  ├─ cleaner.js          清理窗口最小 API
 │  │  ├─ pet-menu.js         右键菜单最小 API
 │  │  └─ video.js            下载窗口最小 API
 │  └─ renderer/
+│     ├─ chat/               独立角色聊天窗口
 │     ├─ cleaner/            清理预览窗口
 │     ├─ pet-menu/           红黑桌宠控制台
 │     ├─ video/              下载队列窗口

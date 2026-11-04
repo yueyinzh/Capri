@@ -11,6 +11,7 @@ const {
   screen
 } = require("electron");
 const { CleanerModule } = require("./main/cleaner");
+const { ChatModule } = require("./main/chat");
 const { PetContextMenu } = require("./main/pet-menu");
 const { VideoModule } = require("./main/video");
 
@@ -36,6 +37,7 @@ let emotionsConfig;
 let dialogueConfig;
 let cleanerModule;
 let videoModule;
+let chatModule;
 let petContextMenu;
 
 const readJson = (filePath) => JSON.parse(fs.readFileSync(filePath, "utf8"));
@@ -295,6 +297,11 @@ function hideMainWindow() {
   mainWindow.hide();
 }
 
+function showMainWindowInactive() {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  if (!mainWindow.isVisible()) mainWindow.showInactive();
+}
+
 function requestPetState(state) {
   showMainWindow();
   sendToPet("pet:set-state", { state, force: true });
@@ -321,6 +328,10 @@ function showInteractionMenu() {
       click: () => requestPetState("sleep")
     },
     { type: "separator" },
+    {
+      label: "和摩羯聊聊…",
+      click: () => chatModule?.openWindow()
+    },
     {
       label: "打开设置",
       click: openSettingsWindow
@@ -360,6 +371,10 @@ function refreshTrayMenu() {
       {
         label: isVisible ? "隐藏摩羯" : "显示摩羯",
         click: isVisible ? hideMainWindow : showMainWindow
+      },
+      {
+        label: "和摩羯聊聊…",
+        click: () => chatModule?.openWindow()
       },
       {
         label: "设置…",
@@ -616,6 +631,7 @@ function quitApplication() {
   petContextMenu?.cleanup();
   cleanerModule?.cleanup();
   videoModule?.cleanup();
+  chatModule?.cleanup();
   if (mainWindow && !mainWindow.isDestroyed()) mainWindow.destroy();
   if (tray) {
     tray.destroy();
@@ -648,6 +664,14 @@ if (!hasSingleInstanceLock) {
       rootDir: ROOT,
       notifyPet
     });
+    chatModule = new ChatModule({
+      rootDir: ROOT,
+      userDataDir: app.getPath("userData"),
+      ownerWindowProvider: () => mainWindow,
+      sendToPet,
+      showPetInactive: showMainWindowInactive,
+      notifyPet
+    });
     petContextMenu = new PetContextMenu({
       rootDir: ROOT,
       snapshotProvider: () => ({
@@ -666,12 +690,14 @@ if (!hasSingleInstanceLock) {
       updateSettings,
       openCleaner: () => cleanerModule.openWindow(),
       openDownloader: () => videoModule.openWindow(),
+      openChat: () => chatModule.openWindow(),
       openSettings: openSettingsWindow,
       hidePet: hideMainWindow,
       quitApplication
     });
     cleanerModule.registerIpc();
     videoModule.registerIpc();
+    chatModule.registerIpc();
     petContextMenu.registerIpc();
     createTray();
     createPetWindow();
@@ -704,6 +730,7 @@ app.on("before-quit", () => {
   petContextMenu?.cleanup();
   cleanerModule?.cleanup();
   videoModule?.cleanup();
+  chatModule?.cleanup();
 });
 app.on("will-quit", () => {
   clearTimeout(settingsSaveTimer);

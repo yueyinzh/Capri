@@ -8,6 +8,7 @@ const bubble = document.querySelector("#speech-bubble");
 const bubbleText = document.querySelector("#speech-text");
 const speechStatus = document.querySelector("#speech-status");
 const quickActions = document.querySelector(".quick-actions");
+const quickChat = document.querySelector("#quick-chat");
 const quickDownload = document.querySelector("#quick-download");
 const quickCleaner = document.querySelector("#quick-cleaner");
 
@@ -106,6 +107,31 @@ function showMessage(text, duration = 2200) {
   scheduleBubbleHide(duration);
 }
 
+function showChatBubble({ text, streaming = false, visible = true, durationMs }) {
+  if (!visible) {
+    hideBubble();
+    return;
+  }
+  registerActivity();
+  clearTimeout(bubbleTimer);
+  bubbleTimer = null;
+  bubbleHideAt = 0;
+  const value = String(text || "");
+  bubbleText.textContent =
+    value.length > 220 ? `…${value.slice(-220)}` : value || "……";
+  speechStatus.textContent = streaming
+    ? "CHAT.LINK // SPEAKING"
+    : "CHAT.LINK // REPLY";
+  bubble.removeAttribute("aria-hidden");
+  bubble.removeAttribute("inert");
+  bubble.classList.add("is-visible");
+  if (!streaming) {
+    scheduleBubbleHide(
+      Number(durationMs) || Math.min(9000, Math.max(4200, value.length * 80))
+    );
+  }
+}
+
 function showDialogue(group, duration = 2200) {
   showMessage(chooseDialogue(group), duration);
 }
@@ -176,9 +202,12 @@ function openQuickAction(action) {
   if (action === "download") {
     showMessage("正在打开视频接收终端…", 1400);
     api.openDownloader();
-  } else {
+  } else if (action === "cleaner") {
     showMessage("正在打开系统清理终端…", 1400);
     api.openCleaner();
+  } else {
+    showMessage("行吧，频道给你开着。", 1400);
+    api.openChat();
   }
 }
 
@@ -356,6 +385,7 @@ stage.addEventListener("keydown", (event) => {
   }
 });
 
+quickChat.addEventListener("click", () => openQuickAction("chat"));
 quickDownload.addEventListener("click", () => openQuickAction("download"));
 quickCleaner.addEventListener("click", () => openQuickAction("cleaner"));
 quickActions.addEventListener("pointerenter", pauseBubbleHide);
@@ -400,6 +430,7 @@ async function initialize() {
     machine.request(state, { force: true });
     showMessage(message || text, durationMs);
   });
+  api.onChatBubble(showChatBubble);
 
   machine.request("idle", {
     force: true,

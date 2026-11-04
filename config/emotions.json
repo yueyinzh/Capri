@@ -191,6 +191,30 @@
       "timeoutMs": 3000,
       "onEnd": "idle",
       "motion": "work"
+    },
+    "chat_listening": {
+      "label": "听你说话",
+      "frames": ["A7_surprised_alt", "A11_surprised"],
+      "priority": 88,
+      "timeoutMs": null,
+      "onEnd": null,
+      "motion": "sway"
+    },
+    "chat_thinking": {
+      "label": "琢磨",
+      "frames": ["A2_work"],
+      "priority": 87,
+      "timeoutMs": null,
+      "onEnd": null,
+      "motion": "work"
+    },
+    "chat_speaking": {
+      "label": "回你",
+      "frames": ["A3_idle_alt", "A15_happy"],
+      "priority": 86,
+      "timeoutMs": null,
+      "onEnd": null,
+      "motion": "bounce"
     }
   }
 }

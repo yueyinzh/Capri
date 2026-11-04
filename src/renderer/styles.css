@@ -239,9 +239,9 @@ button {
 .quick-actions {
   display: grid;
   flex: 1;
-  max-width: 264px;
+  max-width: 310px;
   height: 19px;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 3px;
   pointer-events: none;
 }

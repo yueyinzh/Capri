@@ -18,6 +18,7 @@ class PetContextMenu {
     updateSettings,
     openCleaner,
     openDownloader,
+    openChat,
     openSettings,
     hidePet,
     quitApplication
@@ -28,6 +29,7 @@ class PetContextMenu {
     this.updateSettings = updateSettings;
     this.openCleaner = openCleaner;
     this.openDownloader = openDownloader;
+    this.openChat = openChat;
     this.openSettings = openSettings;
     this.hidePet = hidePet;
     this.quitApplication = quitApplication;
@@ -189,6 +191,10 @@ class PetContextMenu {
       case "open-downloader":
         this.hide();
         this.openDownloader();
+        break;
+      case "open-chat":
+        this.hide();
+        this.openChat();
         break;
       case "open-settings":
         this.hide();

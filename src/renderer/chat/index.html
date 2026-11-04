@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; connect-src 'none'; frame-src 'none'"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAPRI // 对话</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="chat-shell">
+      <header class="chat-header">
+        <div class="identity">
+          <span class="eyebrow">CAPRI // PRIVATE CHANNEL</span>
+          <h1>CAPRI</h1>
+        </div>
+        <div class="header-actions">
+          <button id="clear-chat" class="ghost-button" type="button">清空会话</button>
+          <button
+            id="toggle-settings"
+            class="ghost-button"
+            type="button"
+            aria-expanded="false"
+          >
+            连接设置
+          </button>
+        </div>
+      </header>
+
+      <section id="settings-panel" class="settings-panel" hidden>
+        <div class="settings-heading">
+          <div>
+            <span class="section-code">01 // PROVIDER</span>
+            <h2>连接参数</h2>
+          </div>
+          <span id="key-badge" class="key-badge">KEY // CHECKING</span>
+        </div>
+
+        <form id="provider-form" class="provider-form">
+          <label>
+            <span>Base URL</span>
+            <input
+              id="base-url"
+              type="url"
+              inputmode="url"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="https://api.openai.com/v1"
+              required
+            />
+          </label>
+          <label>
+            <span>模型名</span>
+            <input
+              id="model"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="填写你的 Chat Completions 兼容模型"
+              required
+            />
+          </label>
+          <div class="settings-grid">
+            <label>
+              <span>关系尺度</span>
+              <select id="relationship">
+                <option value="owner">用户本人</option>
+                <option value="acquaintance">熟人</option>
+                <option value="stranger">陌生人</option>
+              </select>
+            </label>
+            <label class="checkbox-label">
+              <input id="include-window" type="checkbox" />
+              <span>允许读取活动应用名和截断后的窗口标题</span>
+            </label>
+          </div>
+          <button id="save-provider" class="primary-button" type="submit">
+            保存连接参数
+          </button>
+        </form>
+
+        <form id="key-form" class="key-form">
+          <label>
+            <span>API Key</span>
+            <input
+              id="api-key"
+              type="password"
+              autocomplete="new-password"
+              spellcheck="false"
+              placeholder="只发送给主进程，保存后立即清空"
+            />
+          </label>
+          <button id="save-key" class="primary-button" type="submit">
+            安全保存
+          </button>
+          <button id="delete-key" class="ghost-button" type="button">
+            删除已存密钥
+          </button>
+        </form>
+
+        <p class="security-note">
+          密钥优先写入系统钥匙串；失败时使用系统加密存储。不会进入 localStorage、聊天记录或页面配置。
+        </p>
+      </section>
+
+      <section class="conversation-panel">
+        <div class="conversation-head">
+          <div>
+            <span class="section-code">02 // DIALOGUE</span>
+            <h2>当前会话</h2>
+          </div>
+          <span id="chat-status" class="chat-status" data-phase="idle">待命</span>
+        </div>
+
+        <div
+          id="message-list"
+          class="message-list"
+          role="log"
+          aria-live="polite"
+          aria-relevant="additions text"
+        ></div>
+      </section>
+
+      <form id="composer" class="composer">
+        <label class="sr-only" for="message-input">对摩羯说</label>
+        <textarea
+          id="message-input"
+          rows="3"
+          maxlength="4000"
+          placeholder="说点什么。Enter 发送，Shift + Enter 换行。"
+        ></textarea>
+        <div class="composer-footer">
+          <span id="composer-status" class="composer-status">
+            会话保存在本机，按角色隔离
+          </span>
+          <div class="composer-actions">
+            <button id="stop-generation" class="ghost-button" type="button" hidden>
+              停止生成
+            </button>
+            <button id="send-message" class="send-button" type="submit">
+              发过去
+            </button>
+          </div>
+        </div>
+      </form>
+    </main>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
